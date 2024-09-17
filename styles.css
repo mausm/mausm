@@ -32,6 +32,12 @@ body {
 #task {
     width: 400px;
 }
+@media only screen and (max-width: 450px) {
+    #task {
+        min-width: calc(100% - 51px);
+    }
+}
+
 .entry {
     border: 1px solid #ddd;
     padding: 10px;
