@@ -82,7 +82,6 @@
 
                 store.add(data).onsuccess = function() {
                     //alert('Data saved to IndexedDB');
-                    loadEntries();
                     document.getElementById('StoreNewTask').reset();
                     document.getElementById('taskDescription').innerHTML = '';
                     Array.from(document.querySelectorAll('input[name="days"]:checked'))
