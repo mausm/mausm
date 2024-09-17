@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Style the navigation menu */
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+/* Navbar links */
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+/* Change color on hover */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+#taskDescription {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+    margin-bottom: 10px;
+}
+#task {
+    width: 400px;
+}
+.entry {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+}
+.entry h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #333;
+}
+.entry p {
+    margin: 5px 0;
+}

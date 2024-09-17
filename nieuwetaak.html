@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Takenlijst</title>
+
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+
+    <body>
+        <div class="navbar">
+            <a href="index.html">Takenlijst</a>
+            <a href="nieuwetaak.html">Nieuwe taak</a>
+            <a href="alletaken.html">Alle taken</a>
+        </div>
+
+        <h2>Voeg een nieuwe taak toe</h2>
+
+        <form id="StoreNewTask">
+
+            <label for="task">Taak:</label>
+            <input type="text" id="task" name="task" required><br><br>
+
+            <label for="taskDescription">Opdracht:</label>
+            <div id="taskDescription" contenteditable="true"></div><br>
+
+            <label for="executeDate">Datum (optioneel): </label>
+            <input type="date" id="executeDate" name="executeDate"><br><br>
+
+            <label for="repeat">Herhaling (optioneel):</label><br>
+            <label>
+                <input type="checkbox" name="days" value="1"> Monday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="2"> Tuesday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="3"> Wednesday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="4"> Thursday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="5"> Friday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="6"> Saturday
+            </label><br>
+            <label>
+                <input type="checkbox" name="days" value="0"> Sunday
+            </label><br><br>
+
+            <button type="submit">Opslaan</button>
+        </form>
+
+        <script>
+            window.onload = function() {
+                document.getElementById('StoreNewTask').reset(); // Reset all form fields
+            };
+
+            // Save form data to IndexedDB
+            document.getElementById('StoreNewTask').addEventListener('submit', function(event) {
+                event.preventDefault();
+                // const repeat = document.getElementById('repeat').value;
+                const task = document.getElementById('task').value;
+                const taskDescription = document.getElementById('taskDescription').innerHTML;
+                const finishedDate = '00-00-0000'; // to check if it was finished this day
+                const executeDate = document.getElementById('executeDate').value; 
+
+                const repeatDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
+                                            .map(checkbox => checkbox.value);
+
+                console.log(document.getElementById('executeDate').value);
+
+                const db = request.result;
+                const transaction = db.transaction('formData', 'readwrite');
+                const store = transaction.objectStore('formData');
+                const data = { repeatDays, taskDescription, task, finishedDate, executeDate };
+
+                store.add(data).onsuccess = function() {
+                    //alert('Data saved to IndexedDB');
+                    loadEntries();
+                    document.getElementById('StoreNewTask').reset();
+                    document.getElementById('taskDescription').innerHTML = '';
+                    Array.from(document.querySelectorAll('input[name="days"]:checked'))
+                                            .map(checkbox => checkbox.value);
+                };
+
+                transaction.onerror = function() {
+                    console.error('Transaction error:', transaction.error);
+                };
+            });
+
+        </script>
+    </body>
+</html>
