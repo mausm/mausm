@@ -60,6 +60,8 @@
             window.onload = function() {
                 document.getElementById('StoreNewTask').reset(); // Reset all form fields
             };
+            // Open or create an IndexedDB
+            const request = indexedDB.open('TasksDB', 1);
 
             // Save form data to IndexedDB
             document.getElementById('StoreNewTask').addEventListener('submit', function(event) {
@@ -72,8 +74,6 @@
 
                 const repeatDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
                                             .map(checkbox => checkbox.value);
-
-                console.log(document.getElementById('executeDate').value);
 
                 const db = request.result;
                 const transaction = db.transaction('formData', 'readwrite');
