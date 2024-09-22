@@ -51,3 +51,16 @@ body {
 .entry p {
     margin: 5px 0;
 }
+
+.message-box {
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none; /* Start hidden */
+  }

@@ -56,12 +56,16 @@
             <button type="submit">Opslaan</button>
         </form>
 
+        <div id="messageBox" class="message-box">
+        </div>
+        <script src="script.js"></script>
+
         <script>
             window.onload = function() {
                 document.getElementById('StoreNewTask').reset(); // Reset all form fields
             };
             // Open or create an IndexedDB
-            const request = indexedDB.open('TasksDB', 1);
+            // const request = indexedDB.open('TasksDB', 1);
 
             // Save form data to IndexedDB
             document.getElementById('StoreNewTask').addEventListener('submit', function(event) {
@@ -75,22 +79,25 @@
                 const repeatDays = Array.from(document.querySelectorAll('input[name="days"]:checked'))
                                             .map(checkbox => checkbox.value);
 
-                const db = request.result;
-                const transaction = db.transaction('formData', 'readwrite');
-                const store = transaction.objectStore('formData');
-                const data = { repeatDays, taskDescription, task, finishedDate, executeDate };
 
-                store.add(data).onsuccess = function() {
-                    //alert('Data saved to IndexedDB');
-                    document.getElementById('StoreNewTask').reset();
-                    document.getElementById('taskDescription').innerHTML = '';
-                    Array.from(document.querySelectorAll('input[name="days"]:checked'))
-                                            .map(checkbox => checkbox.value);
-                };
+                connect(function onConnected(db) {
 
-                transaction.onerror = function() {
-                    console.error('Transaction error:', transaction.error);
-                };
+                    const transaction = db.transaction('formData', 'readwrite');
+                    const store = transaction.objectStore('formData');
+                    const data = { repeatDays, taskDescription, task, finishedDate, executeDate };
+
+                    store.add(data).onsuccess = function() {
+                        //alert('Data saved to IndexedDB');
+                        document.getElementById('StoreNewTask').reset();
+                        document.getElementById('taskDescription').innerHTML = '';
+                        Array.from(document.querySelectorAll('input[name="days"]:checked'))
+                                                .map(checkbox => checkbox.value);
+                    };
+
+                    transaction.onerror = function() {
+                        console.error('Transaction error:', transaction.error);
+                    };
+                });
             });
 
         </script>
