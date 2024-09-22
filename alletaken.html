@@ -80,26 +80,17 @@
 
                     const transaction = db.transaction('formData', 'readwrite');
                     const store = transaction.objectStore('formData');
+   
+                    const deleteRequest = store.delete(id);
 
-                    // check if the task is recurring, then update the finished status. 
-                    // otherwise delete task
-
-                    existingTask.onsuccess = function(event) {
-                        const result = event.target.result;
-                            
-                        const deleteRequest = store.delete(id);
-
-                        deleteRequest.onsuccess = function() {
-                            showMessage('Taak afgerond')
-                            loadEntries(); // Reload the entries after deletion
-                        };
-                        
-                        deleteRequest.onerror = function() {
-                            console.error('Failed to delete entry:', deleteRequest.error);
-                        };
-
-
-                    }
+                    deleteRequest.onsuccess = function() {
+                        showMessage('Taak afgerond')
+                        loadEntries(); // Reload the entries after deletion
+                    };
+                    
+                    deleteRequest.onerror = function() {
+                        console.error('Failed to delete entry:', deleteRequest.error);
+                    };
                 });
             }
 
