@@ -95,39 +95,41 @@ function loadEntries() {
 // Delete an entry from IndexedDB by ID
 function completeTask(id) {
 
-    const db = request.result;
-    const transaction = db.transaction('formData', 'readwrite');
-    const store = transaction.objectStore('formData');
+    connect(function onConnected(db) {
 
-    // check if the task is recurring, then update the finished status. 
-    // otherwise delete task
-    const existingTask = store.get(id);
+        const transaction = db.transaction('formData', 'readwrite');
+        const store = transaction.objectStore('formData');
 
-    existingTask.onsuccess = function(event) {
-        const result = event.target.result;
-            
-        if (result.repeatDays.length > 0) {
-            result.finishedDate = `${day}-${month}-${year}`;
-            
-            // store the updated finished date
-            store.put(result).onsuccess = function() {
-                loadEntries();
-                showMessage('Taak opgeslagen')
-            }           
-        } else {
-            const deleteRequest = store.delete(id);
+        // check if the task is recurring, then update the finished status. 
+        // otherwise delete task
+        const existingTask = store.get(id);
 
-            deleteRequest.onsuccess = function() {
-                showMessage('Taak afgerond')
-                loadEntries(); // Reload the entries after deletion
-            };
-            
-            deleteRequest.onerror = function() {
-                console.error('Failed to delete entry:', deleteRequest.error);
-            };
+        existingTask.onsuccess = function(event) {
+            const result = event.target.result;
+                
+            if (result.repeatDays.length > 0) {
+                result.finishedDate = `${day}-${month}-${year}`;
+                
+                // store the updated finished date
+                store.put(result).onsuccess = function() {
+                    loadEntries();
+                    showMessage('Taak opgeslagen')
+                }           
+            } else {
+                const deleteRequest = store.delete(id);
 
+                deleteRequest.onsuccess = function() {
+                    showMessage('Taak afgerond')
+                    loadEntries(); // Reload the entries after deletion
+                };
+                
+                deleteRequest.onerror = function() {
+                    console.error('Failed to delete entry:', deleteRequest.error);
+                };
+
+            }
         }
-    }
+    });
 }
 
 
