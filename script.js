@@ -118,7 +118,7 @@ function completeTask(id) {
             const deleteRequest = store.delete(id);
 
             deleteRequest.onsuccess = function() {
-                alert('Entry deleted successfully');
+                showMessage('Taak afgerond')
                 loadEntries(); // Reload the entries after deletion
             };
             
