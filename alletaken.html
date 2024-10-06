@@ -27,52 +27,54 @@
 
         <script>
 
-            connect(function onConnected(db) {
-                const transaction = db.transaction('formData', 'readonly');
-                const store = transaction.objectStore('formData');
-                const requestAll = store.getAll();
-            
-                requestAll.onsuccess = function(event) {
-                    const result = event.target.result;
-                    const entriesList = document.getElementById('entriesList');
-                    entriesList.innerHTML = ''; // Clear existing entries
-                    let count = 0;
-                    if (result.length > 0) {
-                        result.forEach(entry => {
-                            
-                            // skip if already finished today for repeating tasks
-                            // if (entry.finishedDate == `${day}-${month}-${year}`) return;
-                            
-                            // if (entry.executeDate && entry.executeDate != `${year}-${month}-${day}`) return;
-            
-                            count++;
-                            const entryDiv = document.createElement('div');
-                            entryDiv.classList.add('entry');
-            
-                            entryDiv.innerHTML = `
-                                <p>Taak: ${entry.task}</p>
-                                <div>${entry.taskDescription}</div>
-                                <p>Datum : ${entry.executeDate} </p>
-                                <p>Datum: ${entry.repeatDays.join(', ')} </p>
-                                <button class="delete-button" onclick="removeTask(${entry.id})">Verwijderen</button>
-                            `;
-                            entriesList.appendChild(entryDiv);
-                        });
-                    } else {
-                        entriesList.innerHTML = '<p>Geen taken.</p>';
-                    }
-            
-                    if (count == 0) {
-                        entriesList.innerHTML = '<p>Geen taken.</p>';
-                    }
-            
-                };
-            
-                transaction.onerror = function() {
-                    console.error('Transaction error:', transaction.error);
-                };
-            
-            });
+            function loadAllEntries () {
+                connect(function onConnected(db) {
+                    const transaction = db.transaction('formData', 'readonly');
+                    const store = transaction.objectStore('formData');
+                    const requestAll = store.getAll();
+                
+                    requestAll.onsuccess = function(event) {
+                        const result = event.target.result;
+                        const entriesList = document.getElementById('entriesList');
+                        entriesList.innerHTML = ''; // Clear existing entries
+                        let count = 0;
+                        if (result.length > 0) {
+                            result.forEach(entry => {
+                                
+                                // skip if already finished today for repeating tasks
+                                // if (entry.finishedDate == `${day}-${month}-${year}`) return;
+                                
+                                // if (entry.executeDate && entry.executeDate != `${year}-${month}-${day}`) return;
+                
+                                count++;
+                                const entryDiv = document.createElement('div');
+                                entryDiv.classList.add('entry');
+                
+                                entryDiv.innerHTML = `
+                                    <p>Taak: ${entry.task}</p>
+                                    <div>${entry.taskDescription}</div>
+                                    <p>Datum : ${entry.executeDate} </p>
+                                    <p>Datum: ${entry.repeatDays.join(', ')} </p>
+                                    <button class="delete-button" onclick="removeTask(${entry.id})">Verwijderen</button>
+                                `;
+                                entriesList.appendChild(entryDiv);
+                            });
+                        } else {
+                            entriesList.innerHTML = '<p>Geen taken.</p>';
+                        }
+                
+                        if (count == 0) {
+                            entriesList.innerHTML = '<p>Geen taken.</p>';
+                        }
+                
+                    };
+                
+                    transaction.onerror = function() {
+                        console.error('Transaction error:', transaction.error);
+                    };
+                
+                });    
+            }
 
             function removeTask(id) {
 
@@ -85,7 +87,7 @@
 
                     deleteRequest.onsuccess = function() {
                         showMessage('Taak afgerond')
-                        loadEntries(); // Reload the entries after deletion
+                        loadAllEntries(); // Reload the entries after deletion
                     };
                     
                     deleteRequest.onerror = function() {
@@ -93,6 +95,8 @@
                     };
                 });
             }
+
+            loadAllEntries();
 
         </script>
     </body>
