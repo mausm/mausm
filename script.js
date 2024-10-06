@@ -64,7 +64,7 @@ function loadEntries() {
                     if (entry.executeDate && entry.executeDate != `${year}-${month}-${day}`) return;
 
                     // for days of the week tasks check the dat
-                    if (entry.repeatDays && count(entry.repeatDays.length) > 0 && entry.repeatDays.includes(weekday) == false)  return;
+                    if (entry.repeatDays && entry.repeatDays.length > 0 && entry.repeatDays.includes(weekday) == false)  return;
 
                     count++;
                     const entryDiv = document.createElement('div');
